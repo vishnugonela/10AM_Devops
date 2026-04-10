@@ -1,4 +1,5 @@
 #!/bin/bash
 
+for i in {1..10}
 
-echo "hello world"
+echo "hello world for loop $i"
