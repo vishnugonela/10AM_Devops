@@ -7,7 +7,13 @@ pipeline{
                 sh '''
                       echo "Build is completed"
                    '''
-}
-}
+         }
+    }
+   stage ('deploy'){
+     steps{
+        sh '''
+               echo "deployment is successful"
+               '''
+   
 }
 }
