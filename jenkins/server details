@@ -1,0 +1,36 @@
+pipeline {
+    agent any 
+
+    stages{
+
+        stage('Server Details'){
+            steps{
+                sh '''
+                    echo "===== CPU DETAILS ====="
+                    lscpu
+
+                    echo "===== MEMORY DETAILS ====="
+                    free -h
+
+                    echo "===== DISK DETAILS ====="
+                    df -h
+                '''
+            }
+        }
+
+        stage('Node Info'){
+            steps {
+                sh '''
+                    echo "===== HOSTNAME ====="
+                    hostname
+
+                    echo "===== OS DETAILS ====="
+                    uname -a
+
+                    echo "===== UPTIME ====="
+                    uptime
+                '''
+            }
+        }
+    }
+}
