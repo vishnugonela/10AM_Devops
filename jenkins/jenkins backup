@@ -1,22 +1,33 @@
 pipeline {
-    agent any 
+    agent { label 'built-in' }   // run on controller
 
     stages{
 
         stage('Backup Jenkins Home'){
             steps{
                 sh '''
-                    echo "Starting Jenkins backup..."
+                    set -e   # stop if any command fails
 
-                    BACKUP_DIR=/backup/jenkins
+                    echo "===== Starting Jenkins Backup ====="
+
+                    # Set backup location (use /tmp if permission issue)
+                    BACKUP_DIR=/tmp/jenkins_backup
                     DATE=$(date +%F-%H-%M)
 
                     mkdir -p $BACKUP_DIR
 
-                    # Create backup tar file
-                    tar -czvf $BACKUP_DIR/jenkins-backup-$DATE.tar.gz $JENKINS_HOME
+                    # Verify Jenkins home
+                    if [ -z "$JENKINS_HOME" ]; then
+                        echo "ERROR: JENKINS_HOME is not set"
+                        exit 1
+                    fi
 
-                    echo "Backup completed successfully"
+                    echo "JENKINS_HOME: $JENKINS_HOME"
+
+                    # Take backup
+                    tar -czf $BACKUP_DIR/jenkins-backup-$DATE.tar.gz $JENKINS_HOME
+
+                    echo "Backup stored at $BACKUP_DIR"
                 '''
             }
         }
@@ -24,14 +35,22 @@ pipeline {
         stage('Cleanup Old Backups'){
             steps {
                 sh '''
-                    echo "Cleaning old backups..."
+                    echo "===== Cleaning Old Backups ====="
 
-                    # Delete backups older than 7 days
-                    find /backup/jenkins -type f -mtime +7 -name "*.tar.gz" -delete
+                    find /tmp/jenkins_backup -type f -name "*.tar.gz" -mtime +7 -delete || true
 
-                    echo "Cleanup done"
+                    echo "Cleanup completed"
                 '''
             }
+        }
+    }
+
+    post {
+        success {
+            echo "Backup completed successfully"
+        }
+        failure {
+            echo "Backup failed - check logs"
         }
     }
 }
