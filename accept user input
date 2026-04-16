@@ -1,0 +1,48 @@
+pipeline {
+    agent any
+
+    stages {
+
+        stage('Get User Input') {
+            steps {
+                script {
+                    // Taking input from user
+                    def userInput = input(
+                        id: 'userInput',
+                        message: 'Enter environment (dev/test/prod)',
+                        parameters: [
+                            string(name: 'ENV', defaultValue: '', description: 'Enter env')
+                        ]
+                    )
+
+                    // Store input in variable
+                    env.SELECTED_ENV = userInput
+                }
+            }
+        }
+
+        stage('Validate Input') {
+            steps {
+                script {
+                    def validEnvs = ['dev', 'test', 'prod']
+
+                    if (!env.SELECTED_ENV?.trim()) {
+                        error "Input cannot be empty"
+                    }
+
+                    if (!(env.SELECTED_ENV in validEnvs)) {
+                        error "Invalid input! Allowed values: dev, test, prod"
+                    }
+
+                    echo "Valid input received: ${env.SELECTED_ENV}"
+                }
+            }
+        }
+
+        stage('Proceed Further') {
+            steps {
+                echo "Deploying to ${env.SELECTED_ENV} environment..."
+            }
+        }
+    }
+}
