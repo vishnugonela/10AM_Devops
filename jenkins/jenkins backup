@@ -1,0 +1,37 @@
+pipeline {
+    agent any 
+
+    stages{
+
+        stage('Backup Jenkins Home'){
+            steps{
+                sh '''
+                    echo "Starting Jenkins backup..."
+
+                    BACKUP_DIR=/backup/jenkins
+                    DATE=$(date +%F-%H-%M)
+
+                    mkdir -p $BACKUP_DIR
+
+                    # Create backup tar file
+                    tar -czvf $BACKUP_DIR/jenkins-backup-$DATE.tar.gz $JENKINS_HOME
+
+                    echo "Backup completed successfully"
+                '''
+            }
+        }
+
+        stage('Cleanup Old Backups'){
+            steps {
+                sh '''
+                    echo "Cleaning old backups..."
+
+                    # Delete backups older than 7 days
+                    find /backup/jenkins -type f -mtime +7 -name "*.tar.gz" -delete
+
+                    echo "Cleanup done"
+                '''
+            }
+        }
+    }
+}
