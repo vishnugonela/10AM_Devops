@@ -21,6 +21,7 @@ pipeline{
         stage('deploy1'){
             steps{
                 sh '''
+                    bash ${WORKSPACE}/script.sh
                     echo "Deployment successful"
                 '''
             }
