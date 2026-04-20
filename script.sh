@@ -1,7 +1,7 @@
 #!/bin/bash
 
 
-for i in {1..0}
+for i in {1..10}
 do
-	echo "Hello Linux in loop $i!"
+	echo "Hello Linux in loop $i!, on host `hostname`"
 done
