@@ -1,0 +1,29 @@
+pipeline{
+    agent any
+    
+    stages{
+        stage('build1'){
+            steps{
+                sh '''
+                    echo "Calling Build stage"
+                '''
+            }
+        }
+        
+        stage('test1'){
+            steps{
+                sh '''
+                    echo "Verification stage completed."
+                '''
+            }
+        }
+        
+        stage('deploy1'){
+            steps{
+                sh '''
+                    echo "Deployment successful"
+                '''
+            }
+        }
+    }
+}
