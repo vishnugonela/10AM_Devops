@@ -1,0 +1,25 @@
+pipeline {
+    agent none
+
+    stages {
+        stage('Run on Multiple Agents') {
+            parallel {
+                stage('Run on slave001') {
+                    agent { label 'slave001' }
+                    steps {
+                        echo "Running on slave001"
+                        sh 'echo Build running on slave001'
+                    }
+                }
+
+                stage('Run on slave002') {
+                    agent { label 'slave002' }
+                    steps {
+                        echo "Running on slave002"
+                        sh 'echo Build running on slave002'
+                    }
+                }
+            }
+        }
+    }
+}
