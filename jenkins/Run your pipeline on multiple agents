@@ -1,0 +1,26 @@
+pipeline {
+    agent none
+
+    stages {
+        stage('Parallel Execution') {
+            steps {
+                script {
+                    parallel(
+                        "slave001": {
+                            node('slave001') {
+                                echo "Running on slave001"
+                                sh 'echo Build running on slave001'
+                            }
+                        },
+                        "slave002": {
+                            node('slave002') {
+                                echo "Running on slave002"
+                                sh 'echo Build running on slave002'
+                            }
+                        }
+                    )
+                }
+            }
+        }
+    }
+}
