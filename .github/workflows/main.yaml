@@ -1,0 +1,15 @@
+name: myapp-workflow
+on:
+  push:
+    branches: ["vishnu"]
+
+jobs:
+   build:
+      runs-on: ubuntu-22.04
+
+      steps:
+        - uses: actions/checkout@v4
+        - name: server details
+          run: |
+            echo "Hello , printing server ip: `hostname -I`"
+            echo "Hello , printing serevr name: `hostname`"
