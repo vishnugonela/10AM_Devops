@@ -13,3 +13,12 @@ jobs:
           run: |
             echo "Hello , printing server ip: `hostname -I`"
             echo "Hello , printing serevr name: `hostname`"
+   test:
+     runs-on: ubunut-22.04
+     steps:
+       - uses: actions/checkout@v4
+       - name: Create content file
+         run: |
+           echo "This is github actions workflow file" > /tmp/file.txt
+           echo "Printing file.txt content details"
+           wc < /tmp/file.txt
